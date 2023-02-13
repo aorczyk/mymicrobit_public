@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html class="has-navbar-fixed-top">
+    <head>
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-TGSE9NC54R"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', 'G-TGSE9NC54R');
+        </script>
+
+        <meta charset="utf-8" />
+        
+        <title>My micro:bit</title>
+
+        <!-- Custom styles -->
+        <link rel="stylesheet" href="styles.css">
+
+        <!-- Bulma -->
+        <link
+            href="https://fonts.googleapis.com/css?family=Orbitron"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css"/>
+        <!-- Vue -->
+        <!-- <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script> -->
+        <!-- Moment -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+        <!-- Fontawesome -->
+        <!-- <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script> -->
+        <!-- <script src="https://kit.fontawesome.com/9e16589d2e.js" crossorigin="anonymous"></script> -->
+        <link href="fontawesome-free-6.1.1-web/css/all.css" rel="stylesheet">
+        <!-- <script src="//cdn.jsdelivr.net/npm/sortablejs@1.10.2/Sortable.min.js"></script> -->
+        <!-- CDNJS :: Vue.Draggable (https://cdnjs.com/) -->
+        <!-- <script src="//cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/4.0.0/vuedraggable.umd.min.js"></script> -->
+
+        <link rel="apple-touch-icon" sizes="57x57" href="img/apple-icon-57x57.png">
+        <link rel="apple-touch-icon" sizes="60x60" href="img/apple-icon-60x60.png">
+        <link rel="apple-touch-icon" sizes="72x72" href="img/apple-icon-72x72.png">
+        <link rel="apple-touch-icon" sizes="76x76" href="img/apple-icon-76x76.png">
+        <link rel="apple-touch-icon" sizes="114x114" href="img/apple-icon-114x114.png">
+        <link rel="apple-touch-icon" sizes="120x120" href="img/apple-icon-120x120.png">
+        <link rel="apple-touch-icon" sizes="144x144" href="img/apple-icon-144x144.png">
+        <link rel="apple-touch-icon" sizes="152x152" href="img/apple-icon-152x152.png">
+        <link rel="apple-touch-icon" sizes="180x180" href="img/apple-icon-180x180.png">
+        <link rel="icon" type="image/png" sizes="192x192"  href="img/android-icon-192x192.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="96x96" href="img/favicon-96x96.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16x16.png">
+        <link rel="manifest" href="img/manifest.json">
+        <meta name="msapplication-TileColor" content="#ffffff">
+        <meta name="msapplication-TileImage" content="img/ms-icon-144x144.png">
+        <meta name="theme-color" content="#ffffff">
+    </head>
+    <body>
+      <!-- <div class="modal is-active">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+          <div class="box">
+            The page has been moved and is now available at this address: <a href="https://medlight.pl/mymicrobit/">https://medlight.pl/mymicrobit/</a>
+          </div>
+        </div>
+      </div> -->
+      <div id="app" v-cloak>
+        <div class="modal" :class="{'is-active': isModalActive}">
+          <div class="modal-background"></div>
+          <div class="modal-card">
+            <header class="modal-card-head">
+              <p class="modal-card-title">Warning</p>
+              <button class="delete" aria-label="close" @click.stop="isModalActive = false"></button>
+            </header>
+            <section class="modal-card-body">
+              Communication between micro:bit and PC is available only in browsers: Chrome, Edge and Opera. Please change a browser.
+            </section>
+            <footer class="modal-card-foot">
+              <button class="button" @click.stop="isModalActive = false">Ok</button>
+            </footer>
+          </div>
+        </div>
+
+        <nav class="navbar is-fixed-top is-link" role="navigation" aria-label="main navigation">
+          <div class="navbar-brand">
+            <strong class="navbar-item">
+              My <img src="img/microbit-logo.png" style="height: 20px; margin-left: 5px; margin-right: 5px;">
+              <!-- micro:bit&nbsp;<i class="fas fa-exchange-alt"></i>&nbsp;PC -->
+              micro:bit
+            </strong>
+            <router-link to="/" class="navbar-item">
+              About
+            </router-link>
+            <!-- <router-link to="/" class="navbar-item">
+              Data transfer
+            </router-link> -->
+            <router-link to="/dashboard"  class="navbar-item">
+              Dashboard
+            </router-link>
+            <router-link to="/projects" class="navbar-item">
+              Projects
+            </router-link>
+            <router-link to="/extensions" class="navbar-item">
+              Extensions
+            </router-link>
+            <router-link to="/links" class="navbar-item">
+              Links
+            </router-link>
+            <router-link to="/contact" class="navbar-item">
+              Contact
+            </router-link>
+            <!-- <div class="navbar-item">
+              <button class="button" :class="{'is-info': !isConnectedWebUSB, 'is-success': isConnectedWebUSB, 'is-warning': isConnectedWebUSBProgress}" title="Connect via WebUSB" @click.stop="connectWebUSB">WebUSB&nbsp;&nbsp;<i class="fab fa-usb"></i></button>
+            </div> -->
+            <!-- <div class="navbar-item">
+              <button class="button" :class="{'is-info': !isConnectedBluetooth, 'is-success': isConnectedBluetooth, 'is-warning': isConnectedBluetoothProgress}" title="Connect via Bluetooth" @click.stop="connectBluetooth">Bluetooth&nbsp;&nbsp;<i class="fab fa-bluetooth-b"></i></button>
+            </div> -->
+            <!-- <a class="navbar-item" href="https://script.google.com/macros/s/AKfycbxW_2_HUB7pTe1D8Azcd3WslObbG6AqjmkDPTSrxfezPhBujhDG8TuWuQGFM8Exc3i9wA/exec" target="_blank">
+              Google Spreadsheets Data Logger
+            </a> -->
+            <!-- <div class="navbar-item">
+              <button class="button" @click.stop="mockDataReceive">New data</button>
+            </div> -->
+          </div>
+
+          <div class="navbar-end">
+          </div>
+        </nav>
+
+        <router-view @keyboard="changeKeyboardReading"></router-view>
+
+        <confirmation :text="confirmationText" :action="confirmationAction" @close="isConfirmationVisible = false" v-if="isConfirmationVisible"></confirmation>
+      </div>
+
+      <script src="utils.js"></script>
+      <script src="Bundle.js"></script>      
+      <script src="uBitWebUsb.js"></script>
+      <script src="uBitBluetooth.js"></script>
+      <script src="i18n.js"></script>
+      <script src="app.js"></script>
+      <script src="Components.js"></script>
+      <script src="Gauges.js"></script>
+      <script src="Chart.js"></script>
+      <script src="Code.js"></script>
+      <script src="ControlPanel.js"></script>
+      <script src="Dashboard.js"></script>
+      <script src="Page_About.js"></script>
+      <script src="Page_Extensions.js"></script>
+      <script src="Page_Projects.js"></script>
+      <script src="Page_Links.js"></script>
+      <script src="Page_Contact.js"></script>
+
+      <script>
+        const routes = [
+          { path: '/', component: ComponentAbout },
+          { path: '/dashboard', component: ComponentDashboard },
+          { path: '/measurements', component: ComponentDashboard },
+          { path: '/extensions', component: ComponentExtensions },
+          { path: '/projects', component: ComponentProjects },
+          { path: '/help', component: ComponentAbout },
+          { path: '/links', component: ComponentLinks },
+          { path: '/contact', component: ComponentContact },
+        ]
+        
+        const router = createRouter({
+          history: createWebHashHistory(),
+          routes,
+        })
+        
+        router.beforeEach((to, from) => {
+          window.scrollTo(0, 0);
+          return true
+        })
+
+        app.use(router)
+
+        ChartModuleMore(Highcharts);
+        HCSoldGauge(Highcharts);
+        app.use(HighchartsVue)
+        app.mount('#app')
+      </script>
+    </body>
+</html>
