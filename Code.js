@@ -213,18 +213,20 @@ app.component('code-panel-command-condition', {
             if (this.condition[0].value == 0){
                 return this.comparisonOperators
             } else if ([13,14].includes(this.condition[0].value)){
-                this.condition[1].value = 3
+                // this.condition[1].value = 3
                 return this.comparisonOperators2
             } else if (this.condition[0].value == -1 && this.commandId == 8){
-                this.condition[1].value = 1
+                // this.condition[1].value = 1
                 return this.comparisonOperators4
             } else if (this.condition[0].value == -1){
-                this.condition[1].value = 2
+                // this.condition[1].value = 2
                 return this.comparisonOperators3
             } else {
-                // this.condition[1].value = 1
                 return this.comparisonOperators
             }
+        },
+        conditionType() {
+            return this.condition[0].value
         }
     },
     watch: {
@@ -238,6 +240,17 @@ app.component('code-panel-command-condition', {
                         this.condition[2].value = codeValue
                     }
                 }
+            }
+        },
+        conditionType(conditionType){
+            if ([13,14].includes(conditionType)){
+                this.condition[1].value = 3
+            } else if (conditionType == -1 && this.commandId == 8){
+                this.condition[1].value = 1
+            } else if (conditionType == -1){
+                this.condition[1].value = 2
+            } else {
+                this.condition[1].value = 2
             }
         }
     },
