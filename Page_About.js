@@ -70,7 +70,7 @@ timestamp, Data 1  , Data 2  , ...</pre>
                     <div>Stop / start receiving data</div>
             
                     <button class="button is-info">
-                        <i class="fas fa-eraser"></i>
+                        <i class="fa-solid fa-xmark"></i>
                     </button>
                     <div>Clear data</div>
 
