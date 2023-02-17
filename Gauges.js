@@ -187,11 +187,9 @@ app.component('gauge', {
           </span>
           <span v-else>
             <span class="icon has-text-success" @click.stop="sensor.status = false" v-if="sensor.status">
-              <!--<i class="fas fa-check-square"></i>-->
               <i class="fa-solid fa-toggle-on"></i>
             </span>
             <span class="icon" @click.stop="sensor.status = true" v-else>
-            <!--<i class="far fa-square"></i>-->
               <i class="fa-solid fa-toggle-off"></i>
             </span>
           </span>

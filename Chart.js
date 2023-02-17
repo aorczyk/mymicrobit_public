@@ -302,8 +302,8 @@ app.component('chart-settings', {
                 chartType: 'line',
                 title: 'New chart',
                 subtitle: '',
-                xAxisDataColumn: null,
-                xAxisType: null,
+                xAxisDataColumn: 0,
+                xAxisType: 'datetime',
                 yAxis: [{
                   title: {
                     text: 'Y Axis 1'
@@ -448,95 +448,80 @@ app.component('chart-settings', {
               </div>
             </div>
 
-            <!--
-            <div class="field">
-              <label class="label">Type</label>
-              <div class="control">
-                <span class="select">
-                  <select v-model="chartSettings.chartType">
-                    <option value="line">Line</option>
-                    <option value="column">Column</option>
-                  </select>
-                </span>
+            <div class="box">
+              <div class="field">
+                <label class="label has-text-info">Size</label>
               </div>
-            </div>
-            -->
-            <div class="box-container">
-              <div class="box">
-                <div class="field">
-                  <label class="label has-text-info">Size</label>
-                </div>
-      
-                <div class="field is-horizontal">
-                  <div class="field-body">
-                    <div class="field">
-                      <label class="label">Start column</label>
-                      <p class="control">
-                        <input class="input" type="number" placeholder="auto" v-model.number="chartSettings.fromColumn">
-                      </p>
-                    </div>
-                    <div class="field">
-                    <label class="label">Column span</label>
-                      <p class="control">
-                        <input class="input" type="number" placeholder="full width" v-model.number="chartSettings.span">
-                      </p>
-                    </div>
+    
+              <div class="field is-horizontal">
+                <div class="field-body">
+                  <div class="field">
+                    <label class="label">Start column</label>
+                    <p class="control">
+                      <input class="input" type="number" placeholder="auto" v-model.number="chartSettings.fromColumn">
+                    </p>
+                  </div>
+                  <div class="field">
+                  <label class="label">Column span</label>
+                    <p class="control">
+                      <input class="input" type="number" placeholder="full width" v-model.number="chartSettings.span">
+                    </p>
                   </div>
                 </div>
+              </div>
 
-                <div class="field is-horizontal">
-                  <div class="field-body">
-                    <div class="field">
-                      <label class="label">Start row</label>
-                      <p class="control">
-                        <input class="input" type="number" placeholder="auto" v-model.number="chartSettings.fromRow">
-                      </p>
-                    </div>
-                    <div class="field">
-                    <label class="label">Row span</label>
-                      <p class="control">
-                        <input class="input" type="number" placeholder="auto" v-model.number="chartSettings.rowSpan">
-                      </p>
-                    </div>
+              <div class="field is-horizontal">
+                <div class="field-body">
+                  <div class="field">
+                    <label class="label">Start row</label>
+                    <p class="control">
+                      <input class="input" type="number" placeholder="auto" v-model.number="chartSettings.fromRow">
+                    </p>
+                  </div>
+                  <div class="field">
+                  <label class="label">Row span</label>
+                    <p class="control">
+                      <input class="input" type="number" placeholder="auto" v-model.number="chartSettings.rowSpan">
+                    </p>
                   </div>
                 </div>
               </div>
+            </div>
 
-              <div class="box" style="height: fit-content">
-                <div class="field">
-                  <label class="label has-text-info">X Axis</label>
-                </div>
+            <div class="box">
+              <div class="field">
+                <label class="label has-text-info">X Axis</label>
+              </div>
 
-                <div class="field is-horizontal">
-                  <div class="field-body">
-                    <div class="field">
-                      <label class="label">Type</label>
-                      <div class="control">
-                        <span class="select">
-                          <select v-model="chartSettings.xAxisType">
-                            <option value="null">None</option>
-                            <option value="linear">Linear</option>
-                            <option value="logarithmic">Logarithmic</option>
-                            <option value="datetime">Datetime</option>
-                          </select>
-                        </span>
-                      </div>
+              <div class="field is-horizontal">
+                <div class="field-body">
+                  <div class="field">
+                    <label class="label">Type</label>
+                    <div class="control">
+                      <span class="select">
+                        <select v-model="chartSettings.xAxisType">
+                          <option value="null">None</option>
+                          <option value="linear">Linear</option>
+                          <option value="logarithmic">Logarithmic</option>
+                          <option value="datetime">Datetime</option>
+                        </select>
+                      </span>
                     </div>
+                  </div>
 
-                    <div class="field">
-                      <label class="label">Data Column Number</label>
-                      <div class="control">
-                        <input class="input" type="number" placeholder="Auto" v-model.number="chartSettings.xAxisDataColumn">
-                      </div>
+                  <div class="field">
+                    <label class="label">Data Column Number</label>
+                    <div class="control">
+                      <input class="input" type="number" placeholder="Auto" v-model.number="chartSettings.xAxisDataColumn">
                     </div>
                   </div>
                 </div>
+              </div>
 
-                <div class="field">
-                  <label class="label">Max. number of x data on the chart</label>
-                  <div class="control">
-                    <input class="input" type="number" v-model.number="chartSettings.dataNrOnChart" placeholder="All">
-                  </div>
+              <div class="field">
+                <label class="label">Max. number of x data on the chart</label>
+                <div class="control">
+                  <input class="input" type="number" v-model.number="chartSettings.dataNrOnChart" placeholder="All">
                 </div>
               </div>
             </div>

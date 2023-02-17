@@ -30,8 +30,14 @@ template: `
             <p>
             <a href="https://makecode.microbit.org/_bofecr3Fk7s4" target="blank"><i class="fa-solid fa-code"></i> Program in MakeCode Editor</a><br>
             <a href="./widgets_all_sensors.mmw" download><i class="fa-solid fa-gauge"></i> Import these widgets on the Dashboard tab</a><br>
-            Dashboard tab: enabling and disabling sensors, changing the data collection interval.<br>
-            Commands: "get" - data refresh.<br>
+            Dashboard tab: enabling and disabling sensors, changing the data collection interval.<br><br>
+            Commands (to paste in the dashboard console): <br>
+            <ul>
+                <li>"get" - refreshing data</li>
+                <li>"bt;300;" - setting the micro:bit Bluetooth send interval (ms) - the minimum interval between sending data</li>
+                <li>"usb;300;" - setting the micro:bit WebUSB send interval (ms) - the minimum interval between sending data</li>
+                <li>"set;1;0;100;20;" - controling the given sensor: "set;data column number;status 1 on, 0 off;sampling interval (ms);value range: &lt; value + 2, value - 2 &gt;"</li>
+            </ul>
             If the sensor interval is smaller than the data sending interval, the average value of the measurements between data sending is taken.<br><br>
             <openimage src="./img/dashboard_sensors_support.png"></openimage>
             </p>

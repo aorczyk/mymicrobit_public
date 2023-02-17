@@ -123,7 +123,7 @@ app.component('console', {
                 <p class="control">
                     <button class="button" @click.stop="close" title="Close">
                       <span class="icon is-small">
-                        <i class="fas fa-times"></i>
+                        <i class="fa-sharp fa-solid fa-chevron-right"></i>
                       </span>
                     </button>
                 </p>
