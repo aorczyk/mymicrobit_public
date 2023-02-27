@@ -12,17 +12,18 @@ app.component('gauge', {
           plotBorderWidth: 0,
           plotShadow: false,
         },
+        credits: {
+          enabled: false
+        },
         exporting: {
           enabled: false
         },
-
         title: {
           text: 'Temperature',
           style: {
             display: 'none'
           }
         },
-
         pane: {
           startAngle: this.sensor.startAngle || -150,
           endAngle: this.sensor.endAngle || 150,

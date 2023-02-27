@@ -244,8 +244,8 @@ app.component('code-panel-command-condition', {
     data() {
         return {
             boolean: [
-                {value: 0, name: 'False', html: '<i class="fa-solid fa-xmark"></i>'},
                 {value: 1, name: 'True', html: '<i class="fa-solid fa-check"></i>'},
+                {value: 0, name: 'False', html: '<i class="fa-solid fa-xmark"></i>'},
             ],
             variablesInputs: [
                 {value: 8, name: 'Variable 1', html: 'X<sub>1</sub>'},
@@ -253,12 +253,12 @@ app.component('code-panel-command-condition', {
                 {value: 10, name: 'Variable 3', html: 'X<sub>3</sub>'},
             ],
             comparisonOperators: [
-                {value: 1, name: '>', html: '<i class="fa-solid fa-greater-than"></i>'},
                 {value: 2, name: '<', html: '<i class="fa-solid fa-less-than"></i>'},
+                {value: 1, name: '>', html: '<i class="fa-solid fa-greater-than"></i>'},
                 {value: 3, name: '=', html: '<i class="fa-solid fa-equals"></i>'},
                 {value: 4, name: '<>', html: '<i class="fa-solid fa-not-equal"></i>'},
-                {value: 5, name: '>v', html: '<i class="fa-solid fa-greater-than"></i> <sub>X</sub>'},
                 {value: 6, name: '<v', html: '<i class="fa-solid fa-less-than"></i> <sub>X</sub>'},
+                {value: 5, name: '>v', html: '<i class="fa-solid fa-greater-than"></i> <sub>X</sub>'},
                 {value: 7, name: '=v', html: '<i class="fa-solid fa-equals"></i> <sub>X</sub>'},
                 {value: 8, name: '<>v', html: '<i class="fa-solid fa-not-equal"></i> <sub>X</sub>'},
             ],
@@ -279,59 +279,49 @@ app.component('code-panel-command-condition', {
                 {value: 1, name: 'or', html: 'or'}, // &or;
             ],
             booleanDistance: [
-                {value: 0, name: 'Near', html: '<i class="fa-solid fa-check"></i>'},
-                {value: 1, name: 'Far', html: '<i class="fa-solid fa-xmark"></i>'},
+                {value: 1, name: 'Far', html: '<i class="fa-solid fa-check"></i>'},
+                {value: 0, name: 'Near', html: '<i class="fa-solid fa-xmark"></i>'},
+            ],
+            equate: [
+                {value: 3, name: '=', html: '<i class="fa-solid fa-equals"></i>'},
             ],
         }
     },
     created() {
     },
     computed: {
-        hasLogicalOperator() {
-            return ![-1, 0, 11, 110, 17, 18, 19, 20].includes(this.condition[0].value)
-        },
-        inputType() {
-            if (this.condition[0].value == 0){
-                this.condition[1].value = 3
-                this.condition[2].value = 0
-            } else if ([0].includes(this.condition[0].value)) {
-                return ''
-            } else if ([11, 110,17,18,19,20].includes(this.condition[0].value)){
-                this.condition[1].value = 3
-                if (this.condition[0].value == 0){
-                    this.condition[2].value = 0
-                } else if (this.condition[0].value == 110){
-                    return 'booleanDistance'
-                } else if (this.condition[0].value == 20){
-                    this.condition[1].value = 2
-                    return 'number'
-                }
-                return 'boolean'
-            } else if (this.condition[1].value > 4){
-                return 'variables'
-            } else {
-                return 'number'
-            }
-        },
-        operators() {
-            if (this.condition[0].value == 0){
-                return this.comparisonOperators
-            } else if ([13,14].includes(this.condition[0].value)){
-                // this.condition[1].value = 3
-                return this.comparisonOperators2
-            } else if (this.condition[0].value == -1 && this.commandId == 8){
-                // this.condition[1].value = 1
-                return this.comparisonOperators4
-            } else if (this.condition[0].value == -1){
-                // this.condition[1].value = 2
-                return this.comparisonOperators3
-            } else {
-                return this.comparisonOperators
-            }
-        },
         conditionType() {
             return this.condition[0].value
-        }
+        },
+        selectedCondition(){
+            let out = this.condition[0].options.filter(x => x.value == this.condition[0].value)[0];
+            return out
+        },
+        operators() {
+            let type = this.selectedCondition.operatorsType;
+            let out = [];
+
+            if (type == 'boolean'){
+                out = this.boolean;
+            } else if (type == 'variablesInputs'){
+                out = this.variablesInputs;
+            } else if (type == 'comparisonOperators'){
+                out = this.comparisonOperators;
+            } else if (type == 'comparisonOperators2'){
+                out = this.comparisonOperators2;
+            } else if (type == 'comparisonOperators3'){
+                out = this.comparisonOperators3;
+            } else if (type == 'comparisonOperators4'){
+                out = this.comparisonOperators4;
+            } else if (type == 'logicalOperators'){
+                out = this.logicalOperators;
+            } else if (type == 'booleanDistance'){
+                out = this.booleanDistance;
+            } else if (type == 'equate'){
+                out = this.equate;
+            }
+            return out
+        },
     },
     watch: {
         keysPressed(newVal){
@@ -350,15 +340,17 @@ app.component('code-panel-command-condition', {
                 }
             }
         },
-        conditionType(conditionType){
-            if ([13,14].includes(conditionType)){
-                this.condition[1].value = 3
-            } else if (conditionType == -1 && this.commandId == 8){
-                this.condition[1].value = 1
-            } else if (conditionType == -1){
-                this.condition[1].value = 2
-            } else {
-                this.condition[1].value = 2
+        operators(){
+            let operatorValue = this.condition[1].value;
+
+            if (!this.operators.filter(x => x.value == operatorValue).length){
+                this.condition[1].value = this.selectedCondition.defaultOperator;
+            }
+
+            if (this.selectedCondition.inputType == 'boolean'){
+                if (![0,1].includes(this.condition[2].value)){
+                    this.condition[2].value = 1
+                }
             }
         }
     },
@@ -371,15 +363,15 @@ app.component('code-panel-command-condition', {
     template: `
     <div class="command-condition-item">
         <dropdown :items="condition[0].options" v-model.value="condition[0].value" title="Data inputs"></dropdown>
-        <dropdown :items="operators" v-model.value="condition[1].value" title="Logical operator" v-if="hasLogicalOperator"></dropdown>
-        <div class="field has-addons" style="margin-bottom: 0;" v-if="inputType == 'number'">
+        <dropdown :items="operators" v-model.value="condition[1].value" title="Logical operator" v-if="selectedCondition.showOperators"></dropdown>
+        <div class="field has-addons" style="margin-bottom: 0;" v-if="selectedCondition.inputType == 'number'">
             <p class="control">
                 <input class="input" type="number" v-model="condition[2].value" @focus="keyboard(false)" @blur="keyboard(true)" @click.stop="()=>{}">
             </p>
         </div>
-        <dropdown :items="boolean" v-model.value="condition[2].value" title="Boolean value" v-if="inputType == 'boolean'"></dropdown>
-        <dropdown :items="booleanDistance" v-model.value="condition[2].value" title="Distance" v-if="inputType == 'booleanDistance'"></dropdown>
-        <dropdown :items="variablesInputs" v-model.value="condition[2].value" title="Variable" v-if="inputType == 'variables'"></dropdown>
+        <dropdown :items="boolean" v-model.value="condition[2].value" title="Boolean value" v-if="selectedCondition.inputType == 'boolean'"></dropdown>
+        <dropdown :items="booleanDistance" v-model.value="condition[2].value" title="Distance" v-if="selectedCondition.inputType == 'booleanDistance'"></dropdown>
+        <dropdown :items="variablesInputs" v-model.value="condition[2].value" title="Variable" v-if="selectedCondition.inputType == 'variables'"></dropdown>
         <dropdown :items="logicalOperators" v-model.value="condition[3].value" title="Logical operators" background="none" v-if="hasNext"></dropdown>
     </div>
     `
@@ -402,11 +394,48 @@ app.component('code-panel-command', {
             },
             backgroundImage: '',
             color: '',
-            hasElse: false
+            hasElse: false,
+            pfSpeedDirection: [
+                {value: 'right', name: 'Right', html: '<i class="fa-solid fa-arrow-rotate-right"></i>'},
+                {value: 'left', name: 'Left', html: '<i class="fa-solid fa-arrow-rotate-left"></i>'},
+                {value: 'break', name: 'Break', html: '<i class="fa-solid fa-stop" style="color: red;"></i>'},
+            ],
+            pfCommands: {
+                right: [
+                    {value: 0b1000000, html: '0'},
+                    {value: 0b1000001, html: '1'},
+                    {value: 0b1000010, html: '2'},
+                    {value: 0b1000011, html: '3'},
+                    {value: 0b1000100, html: '4'},
+                    {value: 0b1000101, html: '5'},
+                    {value: 0b1000110, html: '6'},
+                    {value: 0b1000111, html: '7'},
+                    {value: 0b1100100, html: '+1'},
+                ],
+                left: [
+                    {value: 0b1000000, html: '0'},
+                    {value: 0b1001111, html: '1'},
+                    {value: 0b1001110, html: '2'},
+                    {value: 0b1001101, html: '3'},
+                    {value: 0b1001100, html: '4'},
+                    {value: 0b1001011, html: '5'},
+                    {value: 0b1001010, html: '6'},
+                    {value: 0b1001001, html: '7'},
+                    {value: 0b1100101, html: '+1'},
+                ],
+                break: [
+                    {value: 0b1001000, name: 'Break', html: '-'},
+                ]
+            },
+            pfDirection: '',
         }
     },
     created() {
         this.hasElse = this.command.commands2 && this.command.commands2.length;
+
+        if (this.command.id == 4){
+            this.pfInit()
+        }
     },
     computed: {
         commandClass() {
@@ -429,23 +458,69 @@ app.component('code-panel-command', {
             }
 
             return out;
-        }
+        },
+        keysPressedHuman(){
+            if (this.command.id == 14){
+                let code = this.command.params[0].value;
+                let out = []
+    
+                while (code >= 1){
+                    code = code / 100;
+                    let keyCodes = Math.trunc((code - Math.trunc(code)) * 100);
+
+                    code = Math.trunc(code)
+    
+                    out.push(keyMap[keyCodes])
+                }
+    
+                return out.join(' + ')
+            }
+
+            return ''
+        },
     },
     watch: {
         keysPressed(newVal){
-            if (this.focused){
+            if (this.command.id == 14 && this.focused){
                 let code = newVal.replace('18;','')
                 let codeValue = Number(code.split(';').join(''))
-    
+
                 if (codeValue && ![48,49,50,51,52,53,54,55,56,57,96,97,98,99,100,101,102,103,104,105,8,46].includes(codeValue)){
-                    if (this.command.id == 14) {
-                        this.command.params[0].value = codeValue
-                    }
+                    this.command.params[0].value = codeValue
                 }
             }
-        }
+        },
+        pfCommandValue(){
+            this.setPFCommand();
+        },
+        pfDirection(newVal, oldVal){
+            let index;
+
+            if (newVal == 'break'){
+                this.command.params[2].value = this.pfCommands['break'][0].value;
+                return
+            } else if (oldVal){
+                index = this.pfCommands[oldVal].findIndex(x => x.value == this.command.params[2].value)
+            } else {
+                index = this.pfCommands[newVal].findIndex(x => x.value == this.command.params[2].value)
+            }
+
+            if (index && index != -1){
+                this.command.params[2].value = this.pfCommands[newVal][index].value
+            } else {
+                this.command.params[2].value = this.pfCommands[newVal][0].value
+            }
+        },
     },
     methods: {
+        pfInit(){
+            for (let key in this.pfCommands){
+                if (this.pfCommands[key].findIndex(x => x.value == this.command.params[2].value) != -1){
+                    this.pfDirection = key
+                    break;
+                }
+            }
+        },
         keyboard(value){
             this.focused = !value;
             this.$emit('keyboard', value)
@@ -546,13 +621,9 @@ app.component('code-panel-command', {
                         <i class="fa-solid fa-minus"></i>
                     </span>
                 </a>
-                <div v-if="command.id == 2111">
-                    <dropdown :items="params[0].options" v-model.value="params[0].value" :title="params[0].title"></dropdown>
-                    <input class="input" type="string" v-model="params[1].value[0]" :title="params[1].title">
-                </div>
                 <div class="condition-params" v-else-if="!onlyIcons && command.params && command.params.length">
-                    <div v-for="param in command.params" v-if="!onlyIcons">
-                        <template v-if="!param || !param.if || param.if(command.params)">
+                    <template v-for="param in command.params">
+                        <div v-if="!param || !param.if || param.if(command.params)">
                             <input class="input" :type="param.inputType" v-model="param.value" v-if="param.type == 'input'" @focus="keyboard(false)" @blur="keyboard(true)" @click.stop="()=>{}" :title="param.title">
                             <div class="select" v-if="param.type == 'select'" :title="param.title">
                                 <select v-model="param.value">
@@ -563,12 +634,20 @@ app.component('code-panel-command', {
                                 {{param.postfix}}
                             </div>
                             <dropdown :items="param.options" :background="param.background ? 'none' : 'white'" v-model.value="param.value" :title="param.title" v-if="param.type == 'dropdown'"></dropdown>
+
                             <!--<div class="switch" v-if="param.type == 'switch'" @click.stop="toggleSwitch(param)">
                                 <div v-if="param.value"><i class="fa-solid fa-toggle-on"></i></div>
                                 <div v-else><i class="fa-solid fa-toggle-on"></i></div>
                             </div>-->
-                        </template>
-                    </div>
+
+                            <div class="description" v-if="command.id == 14">{{keysPressedHuman}}</div>
+                        </div>
+                    </template>
+
+                    <template v-if="command.id == 4">
+                        <dropdown :items="pfSpeedDirection" :background="'white'" v-model.value="pfDirection"></dropdown>
+                        <dropdown :items="pfCommands[pfDirection]" :background="'white'" v-model.value="command.params[2].value" v-if="pfDirection != 'break'"></dropdown>
+                    </template>
                 </div>
             </div>
             <div class="command-commands" v-if="command.commands">
@@ -1188,47 +1267,344 @@ app.component('code-panel', {
         },
         getDataInputs(id) {
              let dataInputs = [
-                {value: 1, name: 'Light', html: '<i class="fa-regular fa-sun"></i>'},
-                {value: 7, name: 'Temperature', html: '<i class="fa-solid fa-temperature-low"></i>'},
-                {value: 2, name: 'Sound', html: '<i class="fa-solid fa-microphone"></i>'},
-                {value: 15, name: 'Claps', html: '<i class="fa-solid fa-hands-clapping"></i>'},
+                {
+                    value: 1, 
+                    name: 'Light', 
+                    html: '<i class="fa-regular fa-sun"></i>', 
+                    operatorsType: 'comparisonOperators',
+                    defaultOperator: 0,
+                    inputType: 'number', 
+                    inputValues: [], 
+                    inputRange: [0,255], 
+                    defaultInputValue: 0,
+                    showOperators: true
+                },
+                {
+                    value: 7, 
+                    name: 'Temperature', 
+                    html: '<i class="fa-solid fa-temperature-low"></i>', 
+                    operatorsType: 'comparisonOperators', 
+                    defaultOperator: 0,
+                    inputType: 'number', 
+                    inputValues: [], 
+                    inputRange: [], 
+                    defaultInputValue: 0,
+                    showOperators: true
+                },
+                {
+                    value: 2, 
+                    name: 'Sound', 
+                    html: '<i class="fa-solid fa-microphone"></i>', 
+                    operatorsType: 'comparisonOperators', 
+                    defaultOperator: 0,
+                    inputType: 'number', 
+                    inputValues: [], 
+                    inputRange: [0,100], 
+                    defaultInputValue: 0,
+                    showOperators: true
+                },
+                {
+                    value: 15, 
+                    name: 'Claps', 
+                    html: '<i class="fa-solid fa-hands-clapping"></i>', 
+                    operatorsType: 'comparisonOperators', 
+                    defaultOperator: 0,
+                    inputType: 'number', 
+                    inputValues: [], 
+                    inputRange: [0,100], 
+                    defaultInputValue: 0,
+                    showOperators: true
+                },
                 // {value: 17, name: 'Tilt', html: '<i class="fa-solid fa-slash"></i>'},
-                {value: 3, name: 'Acceleration X', html: '<i class="fa-solid fa-gauge-simple-high"></i> <sub>X</sub>'},
-                {value: 4, name: 'Acceleration Y', html: '<i class="fa-solid fa-gauge-simple-high"></i> <sub>Y</sub>'},
-                {value: 5, name: 'Acceleration Z', html: '<i class="fa-solid fa-gauge-simple-high"></i> <sub>Z</sub>'},
-                {value: 6, name: 'Compass', html: '<i class="fa-regular fa-compass"></i>'},
-                {value: 16, name: 'Analog Pin P1', html: '<i class="fa-solid fa-a"></i> <sub>P1</sub>'},
-                {value: 11, name: 'Digital Pin P1', html: '<i class="fa-solid fa-d"></i> <sub>P1</sub>'},
-                {value: 18, name: 'Button A', html: '<i class="fa-solid fa-square-caret-left"></i> <sub>A</sub>'},
-                {value: 19, name: 'Button B', html: '<i class="fa-solid fa-square-caret-right"></i> <sub>B</sub>'},
+                {
+                    value: 3, 
+                    name: 'Acceleration X', 
+                    html: '<i class="fa-solid fa-gauge-simple-high"></i> <sub>X</sub>', 
+                    operatorsType: 'comparisonOperators', 
+                    defaultOperator: 0,
+                    inputType: 'number', 
+                    inputValues: [], 
+                    inputRange: [0,100], 
+                    defaultInputValue: 0,
+                    showOperators: true
+                },
+                {
+                    value: 4, 
+                    name: 'Acceleration Y', 
+                    html: '<i class="fa-solid fa-gauge-simple-high"></i> <sub>Y</sub>', 
+                    operatorsType: 'comparisonOperators', 
+                    defaultOperator: 0,
+                    inputType: 'number', 
+                    inputValues: [], 
+                    inputRange: [0,100], 
+                    defaultInputValue: 0,
+                    showOperators: true
+                },
+                {
+                    value: 5, 
+                    name: 'Acceleration Z', 
+                    html: '<i class="fa-solid fa-gauge-simple-high"></i> <sub>Z</sub>', 
+                    operatorsType: 'comparisonOperators', 
+                    defaultOperator: 0,
+                    inputType: 'number', 
+                    inputValues: [], 
+                    inputRange: [0,100], 
+                    defaultInputValue: 0,
+                    showOperators: true
+                },
+                {
+                    value: 6, 
+                    name: 'Compass', 
+                    html: '<i class="fa-regular fa-compass"></i>', 
+                    operatorsType: 'comparisonOperators', 
+                    defaultOperator: 0,
+                    inputType: 'number', 
+                    inputValues: [], 
+                    inputRange: [0,100], 
+                    defaultInputValue: 0,
+                    showOperators: true
+                },
+                {
+                    value: 16, 
+                    name: 'Analog Pin P1', 
+                    html: '<i class="fa-solid fa-a"></i> <sub>P1</sub>', 
+                    operatorsType: 'comparisonOperators', 
+                    defaultOperator: 0,
+                    inputType: 'number', 
+                    inputValues: [], 
+                    inputRange: [0,100], 
+                    defaultInputValue: 0,
+                    showOperators: true
+                },
+                {
+                    value: 11, 
+                    name: 'Digital Pin P1', 
+                    html: '<i class="fa-solid fa-d"></i> <sub>P1</sub>', 
+                    operatorsType: 'equate', 
+                    defaultOperator: 0,
+                    inputType: 'boolean', 
+                    inputValues: [0,1], 
+                    inputRange: [0,100], 
+                    defaultInputValue: 0,
+                    showOperators: false
+                },
+                {
+                    value: 18, 
+                    name: 'Button A', 
+                    html: '<i class="fa-solid fa-square-caret-left"></i> <sub>A</sub>',
+                    operatorsType: 'equate', 
+                    defaultOperator: 0,
+                    inputType: 'boolean', 
+                    inputValues: [0,1], 
+                    inputRange: [], 
+                    defaultInputValue: 0,
+                    showOperators: false
+                },
+                {
+                    value: 19, 
+                    name: 'Button B', 
+                    html: '<i class="fa-solid fa-square-caret-right"></i> <sub>B</sub>',
+                    operatorsType: 'equate', 
+                    defaultOperator: 0,
+                    inputType: 'boolean', 
+                    inputValues: [0,1], 
+                    inputRange: [], 
+                    defaultInputValue: 0,
+                    showOperators: false
+                },
+                {
+                    value: 8, 
+                    name: 'Variable 1', 
+                    html: '<i class="fa-solid fa-x"></i> <sub>1</sub>',
+                    operatorsType: 'comparisonOperators', 
+                    defaultOperator: 0,
+                    inputType: 'number', 
+                    inputValues: [], 
+                    inputRange: [], 
+                    defaultInputValue: 0,
+                    showOperators: true
+                },
+                {
+                    value: 9, 
+                    name: 'Variable 2', 
+                    html: '<i class="fa-solid fa-x"></i> <sub>2</sub>',
+                    operatorsType: 'comparisonOperators', 
+                    defaultOperator: 0,
+                    inputType: 'number', 
+                    inputValues: [], 
+                    inputRange: [], 
+                    defaultInputValue: 0,
+                    showOperators: true
+                },
+                {
+                    value: 10, 
+                    name: 'Variable 3', 
+                    html: '<i class="fa-solid fa-x"></i> <sub>3</sub>',
+                    operatorsType: 'comparisonOperators', 
+                    defaultOperator: 0,
+                    inputType: 'number', 
+                    inputValues: [], 
+                    inputRange: [], 
+                    defaultInputValue: 0,
+                    showOperators: true
+                },
 
-                {value: 8, name: 'Variable 1', html: '<i class="fa-solid fa-x"></i> <sub>1</sub>'},
-                {value: 9, name: 'Variable 2', html: '<i class="fa-solid fa-x"></i> <sub>2</sub>'},
-                {value: 10, name: 'Variable 3', html: '<i class="fa-solid fa-x"></i> <sub>3</sub>'},
+                {
+                    value: 12, 
+                    name: 'Sonar', 
+                    html: '<i class="fa-solid fa-satellite-dish"></i>',
+                    operatorsType: 'comparisonOperators', 
+                    defaultOperator: 0,
+                    inputType: 'number', 
+                    inputValues: [], 
+                    inputRange: [], 
+                    defaultInputValue: 0,
+                    showOperators: true
+                },
+                {
+                    value: 110, 
+                    name: 'Distance', 
+                    html: '<i class="fa-solid fa-arrows-left-right-to-line"></i>',
+                    operatorsType: 'equate', 
+                    defaultOperator: 0,
+                    inputType: 'booleanDistance', 
+                    inputValues: [0,1], 
+                    inputRange: [], 
+                    defaultInputValue: 0,
+                    showOperators: false
+                },
 
-                {value: 12, name: 'Sonar', html: '<i class="fa-solid fa-satellite-dish"></i>'},
-                {value: 110, name: 'Distance', html: '<i class="fa-solid fa-arrows-left-right-to-line"></i>'},
+                {
+                    value: 13, 
+                    name: 'Key down', 
+                    html: '<i class="fa-solid fa-keyboard"></i>',
+                    operatorsType: 'comparisonOperators2', 
+                    defaultOperator: 0,
+                    inputType: 'number', 
+                    inputValues: [], 
+                    inputRange: [], 
+                    defaultInputValue: 0,
+                    showOperators: true
+                },
+                {
+                    value: 14, 
+                    name: 'Key up', 
+                    html: '<i class="fa-regular fa-keyboard"></i>',
+                    operatorsType: 'comparisonOperators2', 
+                    defaultOperator: 0,
+                    inputType: 'number', 
+                    inputValues: [], 
+                    inputRange: [], 
+                    defaultInputValue: 0,
+                    showOperators: true
+                },
 
-                {value: 13, name: 'Key down', html: '<i class="fa-solid fa-keyboard"></i>'},
-                {value: 14, name: 'Key up', html: '<i class="fa-regular fa-keyboard"></i>'},
+                {
+                    value: 21, 
+                    name: 'Magnetic Force X', 
+                    html: '<i class="fa-solid fa-magnet"></i> <sub>X</sub>',
+                    operatorsType: 'comparisonOperators', 
+                    defaultOperator: 0,
+                    inputType: 'number', 
+                    inputValues: [], 
+                    inputRange: [], 
+                    defaultInputValue: 0,
+                    showOperators: true
+                },
+                {
+                    value: 22, 
+                    name: 'Magnetic Force Y', 
+                    html: '<i class="fa-solid fa-magnet"></i> <sub>Y</sub>',
+                    operatorsType: 'comparisonOperators', 
+                    defaultOperator: 0,
+                    inputType: 'number', 
+                    inputValues: [], 
+                    inputRange: [], 
+                    defaultInputValue: 0,
+                    showOperators: true
+                },
+                {
+                    value: 23, 
+                    name: 'Magnetic Force Z', 
+                    html: '<i class="fa-solid fa-magnet"></i> <sub>Z</sub>',
+                    operatorsType: 'comparisonOperators', 
+                    defaultOperator: 0,
+                    inputType: 'number', 
+                    inputValues: [], 
+                    inputRange: [], 
+                    defaultInputValue: 0,
+                    showOperators: true
+                },
 
-                {value: 21, name: 'Magnetic Force X', html: '<i class="fa-solid fa-magnet"></i> <sub>X</sub>'},
-                {value: 22, name: 'Magnetic Force Y', html: '<i class="fa-solid fa-magnet"></i> <sub>Y</sub>'},
-                {value: 23, name: 'Magnetic Force Z', html: '<i class="fa-solid fa-magnet"></i> <sub>Z</sub>'},
-                
+                {
+                    value: 24, 
+                    name: 'Throwing the dice', 
+                    html: '<i class="fa-solid fa-dice"></i>',
+                    operatorsType: 'comparisonOperators2', 
+                    defaultOperator: 0,
+                    inputType: 'number', 
+                    inputValues: [], 
+                    inputRange: [1,6], 
+                    defaultInputValue: 0,
+                    showOperators: true
+                },
             ]
 
             if (id == 5 || id == 6){
-                dataInputs.unshift({value: -1, name: 'Time', html: '<i class="fa-solid fa-stopwatch"></i>'})
+                dataInputs.unshift({
+                    value: -1, 
+                    name: 'Time', 
+                    html: '<i class="fa-solid fa-stopwatch"></i>',
+                    operatorsType: 'comparisonOperators3', 
+                    defaultOperator: 0,
+                    inputType: 'number', 
+                    inputValues: [], 
+                    inputRange: [], 
+                    defaultInputValue: 0,
+                    showOperators: true
+                })
             }
 
             if (id == 5){
-                dataInputs.unshift({value: 20, name: 'Counter', html: '<i class="fa-solid fa-n"></i>'})
-                dataInputs.unshift({value: 0, name: '-', html: '<i class="fa-solid fa-ellipsis"></i>'})
+                dataInputs.unshift({
+                    value: 20, 
+                    name: 'Counter', 
+                    html: '<i class="fa-solid fa-n"></i>',
+                    operatorsType: 'comparisonOperators', 
+                    defaultOperator: 0,
+                    inputType: 'number', 
+                    inputValues: [], 
+                    inputRange: [], 
+                    defaultInputValue: 0,
+                    showOperators: true
+                })
+                dataInputs.unshift({
+                    value: 0, 
+                    name: '-', 
+                    html: '<i class="fa-solid fa-ellipsis"></i>',
+                    operatorsType: 'comparisonOperators', 
+                    defaultOperator: 0,
+                    inputType: '', 
+                    inputValues: [], 
+                    inputRange: [], 
+                    defaultInputValue: 0,
+                    showOperators: false
+                })
             }
 
             if (id == 8){
-                dataInputs.push({value: -1, name: 'Stopwatch', html: '<i class="fa-solid fa-stopwatch"></i>'})
+                dataInputs.push({
+                    value: -1, 
+                    name: 'Stopwatch', 
+                    html: '<i class="fa-solid fa-stopwatch"></i>',
+                    operatorsType: 'comparisonOperators4', 
+                    defaultOperator: 0,
+                    inputType: 'number', 
+                    inputValues: [], 
+                    inputRange: [], 
+                    defaultInputValue: 0,
+                    showOperators: true
+                })
             }
 
             return dataInputs
@@ -1237,7 +1613,7 @@ app.component('code-panel', {
             let dataInputs = this.getDataInputs(id);
 
             let condition = [
-                {value: 15, options: dataInputs},
+                {value: 1, options: dataInputs},
                 {value: 1},
                 {value: 0},
                 {value: 0},
@@ -1289,7 +1665,7 @@ app.component('code-panel', {
                         {value: 1, name: 'Blue', html: '<i class="fa-solid fa-clapperboard"></i>', color: 'blue'},
                         {value: 2, name: 'Red', html: '<i class="fa-solid fa-clapperboard"></i>', color: 'red'},
                     ], value: 1, title: 'Slot'},
-                    {type: 'select', title: 'Speed', options: [
+                    {type: '', title: 'Speed', options: [
                         {value: 0b1000111, name: 7},
                         {value: 0b1000110, name: 6},
                         {value: 0b1000101, name: 5},
@@ -1311,7 +1687,7 @@ app.component('code-panel', {
                         {value: 0b1001011, name: -5},
                         {value: 0b1001010, name: -6},
                         {value: 0b1001001, name: -7},
-                    ], value: 0},
+                    ], value: 0b1000111, if(){false}},
                 ]},
                 5: {id: 5, icon: '<i class="fa-solid fa-repeat"></i>', type: 'programControl', title: 'Repeat block', 
                     conditions: [

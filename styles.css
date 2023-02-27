@@ -924,7 +924,7 @@ input[type="file"] {
 
 .dropdown-content {
   width: fit-content;
-  max-height: 165px; /* 33 x 5 */
+  max-height: 264px; /* 33 x 5 */
   overflow: auto;
   padding-bottom: 0 !important;
   padding-top: 0 !important;

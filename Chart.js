@@ -18,6 +18,9 @@ app.component('chart', {
                     // panKey: 'ctrl',
                     zoomType: 'xy'
                 },
+                credits: {
+                  enabled: false
+                },
                 time: {
                     getTimezoneOffset: function () {
                         var timedifference = new Date().getTimezoneOffset();
